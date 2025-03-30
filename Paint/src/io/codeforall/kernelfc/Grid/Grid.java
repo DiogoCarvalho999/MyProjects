@@ -7,27 +7,29 @@ import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
 
-public class Grid implements KeyboardHandler{
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Grid implements KeyboardHandler {
     private static final int CELL_SIZE = 30;  // Tamanho de cada célula
     private static final int COLS = 20;       // Número de colunas
     private static final int ROWS = 20;       // Número de linhas
     private static final int PADDING = 10;    // Margem da grid
+    private static final String SAVE_FILE = "src/io/codeforall/kernelfc/DrawingFiles/drawing.txt"; // Ficheiro para salvar o desenho
     private Keyboard keyboard;
-    private boolean isPainted;
     private int cursorRow;
     private int cursorCol;
     private Rectangle cursor;
-    private Rectangle cell;
-    private static Rectangle paintCell;
-    private Rectangle[] paintedCells;
-    private int paintedCellNum;
+    private List<Rectangle> paintedCells;
 
     public Grid() {
-        drawGrid();// Desenha a grid ao inicializar
+        drawGrid(); // Desenha a grid ao inicializar
         this.keyboard = new Keyboard(this);
         this.cursorCol = PADDING;
         this.cursorRow = PADDING;
-        this.isPainted = false;
+        this.paintedCells = new ArrayList<>();
         createKeyboardEvents();
         cursorPosition();
     }
@@ -35,7 +37,7 @@ public class Grid implements KeyboardHandler{
     void drawGrid() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                this.cell = new Rectangle(getX(col), getY(row), CELL_SIZE, CELL_SIZE);
+                Rectangle cell = new Rectangle(getX(col), getY(row), CELL_SIZE, CELL_SIZE);
                 cell.setColor(Color.GRAY);
                 cell.draw();  // Apenas desenha as bordas
             }
@@ -43,10 +45,12 @@ public class Grid implements KeyboardHandler{
     }
 
     public void cursorPosition() {
+        if (cursor != null) {
+            cursor.delete();
+        }
         cursor = new Rectangle(cursorCol, cursorRow, CELL_SIZE, CELL_SIZE);
         cursor.setColor(Color.GREEN);
         cursor.fill();
-
     }
 
     // Calcula a coordenada X com base na coluna
@@ -59,105 +63,96 @@ public class Grid implements KeyboardHandler{
         return PADDING + row * CELL_SIZE;
     }
 
-    public int getCursorRow() {
-        return cursorRow;
-    }
-
-    public int getCursorCol() {
-        return cursorCol;
-    }
-
-    public void setCursorRow(int cursorRow) {
-        this.cursorRow = cursor.getY();
-    }
-
-    public void setCursorCol(int cursorCol) {
-        this.cursorCol = cursor.getX();
-    }
-
     public void createKeyboardEvents() {
-
-        KeyboardEvent keyboardEventRight = new KeyboardEvent();
-        keyboardEventRight.setKey(KeyboardEvent.KEY_RIGHT);
-        keyboardEventRight.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(keyboardEventRight);
-
-        KeyboardEvent keyboardEventLeft = new KeyboardEvent();
-        keyboardEventLeft.setKey(KeyboardEvent.KEY_LEFT);
-        keyboardEventLeft.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(keyboardEventLeft);
-
-        KeyboardEvent keyboardEventUp = new KeyboardEvent();
-        keyboardEventUp.setKey(KeyboardEvent.KEY_UP);
-        keyboardEventUp.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(keyboardEventUp);
-
-        KeyboardEvent keyboardEventDown = new KeyboardEvent();
-        keyboardEventDown.setKey(KeyboardEvent.KEY_DOWN);
-        keyboardEventDown.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(keyboardEventDown);
-
-        KeyboardEvent keyboardEventSPACE = new KeyboardEvent();
-        keyboardEventSPACE.setKey(KeyboardEvent.KEY_SPACE);
-        keyboardEventSPACE.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(keyboardEventSPACE);
+        int[] keys = {KeyboardEvent.KEY_RIGHT, KeyboardEvent.KEY_LEFT, KeyboardEvent.KEY_UP, KeyboardEvent.KEY_DOWN,
+                KeyboardEvent.KEY_SPACE, KeyboardEvent.KEY_C, KeyboardEvent.KEY_S, KeyboardEvent.KEY_L};
+        for (int key : keys) {
+            KeyboardEvent keyboardEvent = new KeyboardEvent();
+            keyboardEvent.setKey(key);
+            keyboardEvent.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+            keyboard.addEventListener(keyboardEvent);
+        }
     }
 
     @Override
     public void keyPressed(KeyboardEvent keyboardEvent) {
-        int distanceToMove = CELL_SIZE;
         switch (keyboardEvent.getKey()) {
             case KeyboardEvent.KEY_LEFT:
-                if (cursor.getX() <= PADDING) {
-                    distanceToMove = 0;
-                } else {
-                    distanceToMove = -CELL_SIZE;
-                }
-                this.cursor.translate(distanceToMove, 0);
-                this.setCursorCol(cursorCol);
+                if (cursorCol > PADDING) cursorCol -= CELL_SIZE;
                 break;
             case KeyboardEvent.KEY_RIGHT:
-                if (cursor.getX() >= CELL_SIZE * COLS - COLS) {
-                    distanceToMove = 0;
-                } else {
-                    distanceToMove = CELL_SIZE;
-                }
-                this.cursor.translate(distanceToMove, 0);
-                this.setCursorCol(cursorCol);
+                if (cursorCol < getX(COLS - 1)) cursorCol += CELL_SIZE;
                 break;
             case KeyboardEvent.KEY_UP:
-                if (cursor.getY() <= CELL_SIZE) {
-                    distanceToMove = 0;
-                } else {
-                    distanceToMove = -CELL_SIZE;
-                }
-                this.cursor.translate(0, distanceToMove);
-                this.setCursorRow(cursorRow);
+                if (cursorRow > PADDING) cursorRow -= CELL_SIZE;
                 break;
             case KeyboardEvent.KEY_DOWN:
-                if (cursor.getY() >= CELL_SIZE * ROWS - ROWS) {
-                    distanceToMove = 0;
-                } else {
-                    distanceToMove = CELL_SIZE;
-                }
-                this.cursor.translate(0, distanceToMove);
-                this.setCursorRow(cursorRow);
+                if (cursorRow < getY(ROWS - 1)) cursorRow += CELL_SIZE;
                 break;
             case KeyboardEvent.KEY_SPACE:
-                //while ( keyboardEvent.getKey() == KeyboardEvent.KEY_SPACE) {}
-                //paintedCells = new Rectangle[ROWS*COLS];
-                /*paintedCells[paintedCellNum] = new Rectangle(cursorCol, cursorRow, CELL_SIZE, CELL_SIZE);
-                paintedCells[paintedCellNum].fill();*/
-                paintCell = new Rectangle(cursorCol, cursorRow, CELL_SIZE, CELL_SIZE);
+                togglePaintCell();
+                break;
+            case KeyboardEvent.KEY_C:
+                clearAllPaintedCells();
+                break;
+            case KeyboardEvent.KEY_S:
+                saveDrawing();
+                break;
+            case KeyboardEvent.KEY_L:
+                loadDrawing();
+                break;
+        }
+        cursorPosition(); // Redesenha o cursor para garantir que ele fique sobre as células pintadas
+    }
+
+    private void togglePaintCell() {
+        Iterator<Rectangle> iterator = paintedCells.iterator();
+        while (iterator.hasNext()) {
+            Rectangle cell = iterator.next();
+            if (cell.getX() == cursorCol && cell.getY() == cursorRow) {
+                cell.delete(); // Remove a célula pintada
+                iterator.remove();
+                return;
+            }
+        }
+        // Se não encontrou uma célula pintada, pinta uma nova
+        Rectangle paintCell = new Rectangle(cursorCol, cursorRow, CELL_SIZE, CELL_SIZE);
+        paintCell.fill();
+        paintedCells.add(paintCell);
+    }
+
+    private void clearAllPaintedCells() {
+        for (Rectangle cell : paintedCells) {
+            cell.delete(); // Remove visualmente cada célula pintada
+        }
+        paintedCells.clear(); // Limpa a lista de células pintadas
+    }
+
+    private void saveDrawing() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SAVE_FILE))) {
+            for (Rectangle cell : paintedCells) {
+                writer.write(cell.getX() + "," + cell.getY());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
+    }
+
+    private void loadDrawing() {
+        clearAllPaintedCells();
+        try (BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                int x = Integer.parseInt(parts[0]);
+                int y = Integer.parseInt(parts[1]);
+                Rectangle paintCell = new Rectangle(x, y, CELL_SIZE, CELL_SIZE);
                 paintCell.fill();
-                cursor.delete();
-                cursorPosition();
-                //this.paintedCellNum ++;
-                if (paintCell.isFilled()) {
-                    paintCell = new Rectangle(cursorCol, cursorRow, CELL_SIZE, CELL_SIZE);
-                    paintCell.setColor(Color.GRAY);
-                    paintCell.draw();
-                }
+                paintedCells.add(paintCell);
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading file: " + e.getMessage());
         }
     }
 
@@ -165,3 +160,4 @@ public class Grid implements KeyboardHandler{
     public void keyReleased(KeyboardEvent keyboardEvent) {
     }
 }
+
