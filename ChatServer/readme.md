@@ -24,14 +24,14 @@ ExecutorService (thread pool)
 CopyOnWriteArrayList to manage connected clients
 
 📁 Project Structure
-arduino
-Copy
-Edit
+
+```
 ChatServer/
 └── io/
     └── codeforall/
         └── kernelfc/
             └── Server.java
+```
 ⚙️ How to Run
 1. Compile the server
 javac io/codeforall/kernelfc/Server.java
