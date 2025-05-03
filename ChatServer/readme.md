@@ -1,62 +1,65 @@
 ChatServer 💬
-Aplicação de Chat TCP em Java (via terminal)
+Java TCP Chat Application (via terminal)
 
-Este projeto implementa um servidor de chat multicliente em Java, utilizando Sockets e Threads. Os clientes podem comunicar entre si em tempo real através de um terminal, usando o comando netcat para conectar ao servidor. Ideal para compreender conceitos como redes, programação concorrente e protocolos simples de comunicação.
+This project implements a multiclient chat server in Java using Sockets and Threads. Clients can communicate in real-time via the terminal using netcat, without needing a Java client. It's ideal for learning about networking, concurrency, and simple communication protocols.
 
-🚀 Funcionalidades
-Comunicação em tempo real entre vários clientes
+🚀 Features
+Real-time communication between multiple clients
 
-Comando /list para listar utilizadores online
+/list command to view connected users
 
-Comando /whisper <nome> <mensagem> para mensagens privadas
+/whisper <name> <message> to send private messages
 
-Comando /quit para sair do chat
+/quit command to exit the chat
 
-Comunicação via terminal usando netcat (sem cliente Java)
+Terminal-based communication using netcat (no Java client required)
 
-🛠️ Tecnologias Utilizadas
+🛠️ Technologies Used
 Java 17
 
-Sockets TCP
+TCP Sockets
 
 ExecutorService (thread pool)
 
-CopyOnWriteArrayList para gestão de clientes
+CopyOnWriteArrayList to manage connected clients
 
-📁 Estrutura do Projeto
+📁 Project Structure
+arduino
+Copy
+Edit
 ChatServer/
 └── io/
     └── codeforall/
         └── kernelfc/
             └── Server.java
-
-⚙️ Como Correr
-1. Compilar o servidor
+⚙️ How to Run
+1. Compile the server
 javac io/codeforall/kernelfc/Server.java
 
-2. Correr o servidor
+2. Run the server
 java io.codeforall.kernelfc.Server
 
-Deverás ver:
+Expected output:
 Created a socket in port: 8585
 
-3. Abrir clientes via netcat
-Em outros terminais:
+3. Connect clients using netcat
+In separate terminal windows:
+
 nc localhost 8585
+Then:
 
-Depois:
-Introduz um nome de utilizador
+Enter a username when prompted
 
-Envia mensagens públicas ou comandos
+Start sending messages or commands
 
-💡 Exemplos de comandos suportados
-Olá a todos! → mensagem pública
+💡 Supported Commands
+Hello everyone! → public message
 
-/list → ver utilizadores online
+/list → show all connected users
 
-/whisper Maria Olá, estás aí? → mensagem privada
+/whisper Maria Hey, are you there? → private message
 
-/quit → sair do chat
+/quit → disconnect from the chat
 
-📸 Capturas de Ecrã
-![Screenshot at 15-46-28](https://github.com/user-attachments/assets/307f88e5-f8d6-4480-a5d3-274f9630ae4c)
+📸 Screenshots
+![Screenshot at 15-46-28](https://github.com/user-attachments/assets/ad79c35d-f448-40da-9bd3-ba72b32a6d8c)
