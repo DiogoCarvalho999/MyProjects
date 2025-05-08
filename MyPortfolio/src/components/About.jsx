@@ -10,7 +10,7 @@ const About = () => {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4 }}
     >
-      <section className="bg-white dark:bg-gray-900 py-16 px-4 md:px-10 lg:px-20 text-black dark:text-white">
+      <section className="bg-transparent py-16 px-4 md:px-10 lg:px-20 text-black dark:text-white backdrop-blur-sm">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
           {/* Imagem */}
           <div className="flex-shrink-0 w-64 h-64 overflow-hidden rounded-full shadow-lg">
