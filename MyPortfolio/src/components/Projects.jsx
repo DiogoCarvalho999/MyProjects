@@ -3,7 +3,7 @@ import bitbybidImg from "../assets/WhatsApp Image 2025-05-02 at 2.14.12 PM.jpeg"
 import chatserverImg from "../assets/Screenshot at 15-46-28.png";
 import mygameImg from "../assets/1741790685943.png";
 import paintImg from "../assets/Screenshot at 16-23-11.png";
-import financeImg from "src/assets/Screenshot at 21-21-32.png";
+import financeImg from "../assets/Screenshot at 21-21-32.png";
 
 const featuredProjects = [
   {
