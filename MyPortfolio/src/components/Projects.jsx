@@ -3,6 +3,7 @@ import bitbybidImg from "../assets/WhatsApp Image 2025-05-02 at 2.14.12 PM.jpeg"
 import chatserverImg from "../assets/Screenshot at 15-46-28.png";
 import mygameImg from "../assets/1741790685943.png";
 import paintImg from "../assets/Screenshot at 16-23-11.png";
+import financeImg from "src/assets/Screenshot at 21-21-32.png";
 
 const featuredProjects = [
   {
@@ -13,6 +14,14 @@ const featuredProjects = [
     image: bitbybidImg,
     github:
       "https://github.com/DiogoCarvalho999/MyProjects/tree/main/BitByBid%20(RFP%20SPA)",
+  },
+  {
+    name: "FinanceFlow (Dashboard)",
+    description:
+      "A fullstack finance manager that lets users track income and expenses, filter by time period, view summary charts, and manage transactions – all with JWT authentication.",
+    stack: ["Java", "Spring Boot", "PostgreSQL", "React", "Tailwind", "JWT"],
+    image: financeImg,
+    github: "https://github.com/DiogoCarvalho999/FinanceDashboard",
   },
   {
     name: "ChatServer",
